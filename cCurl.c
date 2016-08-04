@@ -4,71 +4,43 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "cCurl.h"
-void setup_Curl(struct Curl *_c)
+
+void CurlInit(CurlCtx *ctx)
 {
-    _c->HASH_SIZE = 243;
-    _c->STATE_SIZE = 3 * _c->HASH_SIZE;
-    _c->T[0] = 1;
-    _c->T[1] = 0;
-    _c->T[2] = -1;
-    _c->T[3] = 0;
-    _c->T[4] = 1;
-    _c->T[5] = -1;
-    _c->T[6] = 0;
-    _c->T[7] = 0;
-    _c->T[8] = -1;
-    _c->T[9] = 1;
-    _c->T[10] = 0;
-    int i;
-    memset(_c->INDICES, 0, 730*sizeof(int));
-    for (i = 0; i < _c->STATE_SIZE; i++) {
-        _c->INDICES[i + 1] = _c->INDICES[i] + (_c->INDICES[i] < 365 ? 364 : -365);
-    }
-    for(i=0; i<729; i++){
-        _c->state[i] = 0;
-        _c->stateCopy[i] = 0;
-    }
+	for(int i = 0; i < STATE_SIZE + 1; ++i) ctx->Indices[i] = (i * 364) % 729;
+	memset(ctx->State, 0x00, STATE_SIZE);
 }
 
-inline void transform(struct Curl *_c)
+void CurlTransform(CurlCtx *ctx)
 {
-    int i, r, j;
-    for (r = 27; r-- > 0;) {
-        for(j=0; j<729; j++){
-            _c->stateCopy[j] = _c->state[j];
-        }
-        for (i = 0; i < _c->STATE_SIZE;) {
-            _c->state[i] = (_c->T[  _c->stateCopy[_c->INDICES[i]] +
-                                    (_c->stateCopy[_c->INDICES[i+1]] << 2) +
-                                    5 ]);
-            i++;
-        }
-    }
+    for(int r = 0; r < 27; ++r)
+    {
+		int8_t StateCopy[STATE_SIZE + 1];
+		memcpy(StateCopy, ctx->State, STATE_SIZE);
+		
+		for(int i = 0; i < STATE_SIZE; ++i)
+			ctx->State[i] = T[StateCopy[ctx->Indices[i]] + (StateCopy[ctx->Indices[i + 1]] << 2) + 5];
+	}
 }
 
-inline void absorb(struct Curl *_c, int *input, int offset, int size)
+void Curl(CurlCtx *ctx, int8_t *input, int size)
 {
-    do {
-        //            System.arraycopy(input, offset, state, 0, size < HASH_SIZE ? size : HASH_SIZE);
-        memcpy(_c->state, input + offset, size < _c->HASH_SIZE ? size*sizeof(int) : _c->HASH_SIZE * sizeof(int));
-        transform(_c);
-        offset += _c->HASH_SIZE;
-    } while ((size -= _c->HASH_SIZE) > 0);
+	do
+	{
+		memcpy(ctx->State, input, size < HASH_SIZE ? size : HASH_SIZE);
+		CurlTransform(ctx);
+		input += HASH_SIZE;
+		size -= HASH_SIZE;
+	} while(size > 0);
 }
 
-
-inline void reset(struct Curl *_c)
+void CurlSqueeze(CurlCtx *ctx, void *output)
 {
-    memset(_c->state, 0, _c->STATE_SIZE*sizeof(int));
-}
-
-
-inline void squeeze(struct Curl *_c, int *output, const int offset)
-{
-    memcpy(output+offset, _c->state, _c->HASH_SIZE*sizeof(int));
-    transform(_c);
+    memcpy(output, ctx->State, HASH_SIZE);
+    CurlTransform(ctx);
 }
 
 //Tests
@@ -78,8 +50,8 @@ inline void squeeze(struct Curl *_c, int *output, const int offset)
     uncomment from here on and run
 */
 
-int run_test(int);
-/*
+int run_test(int8_t in);
+
 int main()
 {
 
@@ -90,40 +62,40 @@ int main()
     return 0;
 }
 
-*/
-int run_test(int in)
+
+int run_test(int8_t in)
 {
-    if (in !=0 && in!=-1 && in != 1){
+	CurlCtx ctx;
+	int8_t input[243], output[256], retVal = 1;
+	char final_output[1024];
+    if (in < -1 || in > 1)
+    {
         fprintf(stderr, "Invalid input\n");
-        return -1;
+        return(-1);
     }
-    int retVal = 1;
-    struct Curl c;
-    setup_Curl(&c);
-    int input[243] ;
-    int i, j;
-    for(j=0; j<243; j++){
-        input[j] = in;
-    }
-    int output[256];
-    char final_output[1024];
+    
+    CurlInit(&ctx);
+    memset(input, in, HASH_SIZE);
+    memset(output, 0x00, 256);
+    
     memset(final_output, 0 , 1024 * sizeof(char));
-    for(j=0; j<256; j++){
-        output[j] = 0;
-    }
-    absorb(&c, input, 0, 243);
-    squeeze(&c, output, 0);
+    
+    Curl(&ctx, input, HASH_SIZE);
+    CurlSqueeze(&ctx, output);
 
     char temp[16];
     strcpy(final_output, "[");
-    for(i=0; i<c.HASH_SIZE-1; i++){
+    for(int i = 0; i < HASH_SIZE - 1; ++i)
+    {
         sprintf(temp, "%d, ", output[i]);
         strcat(final_output, temp);
     }
-    sprintf(temp, "%d]", output[c.HASH_SIZE-1]);
+    
+    sprintf(temp, "%d]", output[HASH_SIZE-1]);
     strcat(final_output, temp);
 
-    //Test
+    // Test
+    
     FILE *fp;
     char ref[1024];
     memset(ref, 0, 1024);

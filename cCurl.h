@@ -1,6 +1,5 @@
-/*
-    2016 BTCDDev, based on Code from Come-from-Beyond
-*/
+// Copyright 2016 Wolf (Wolf9466)
+
 #ifndef _C_CURL_H_
 #define _C_CURL_H_
 

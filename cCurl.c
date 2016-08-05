@@ -1,6 +1,5 @@
-/*
-    2016 BTCDDev, based on Code from Come-from-Beyond
-*/
+// Copyright 2016 Wolf (Wolf9466)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,64 +53,49 @@ int run_test(int8_t in);
 
 int main()
 {
+	int ret = run_test(-1);
+	printf("Running Test on [-1]: %s %d\n",  ret == 0 ? "PASS": "FAIL", ret);
+	
+	ret = run_test(0);
+	printf("Running Test on [0]: %s %d\n",   ret == 0 ? "PASS": "FAIL", ret);
+	
+	ret = run_test(1);
+	printf("Running Test on [1]: %s %d\n", ret == 0 ? "PASS": "FAIL", ret);
 
-    printf("Running Test on [-1]: %s %d\n", run_test(-1) ==0 ? "PASS": "FAIL", run_test(-1));
-    printf("Running Test on [0]: %s %d\n", run_test (0)  ==0 ? "PASS": "FAIL", run_test(0));
-    printf("Running Test on [1]: %s %d\n", run_test (1)  ==0 ? "PASS": "FAIL", run_test(1));
-
-    return 0;
+	return 0;
 }
+
+int8_t TestVector0[] = { -1, 0, -1, 1, -1, -1, 0, 0, -1, -1, 0, 1, -1, 1, 0, 0, 1, 1, 1, -1, 1, -1, 1, 0, 0, -1, 0, -1, 1, 1, 1, 0, 1, 0, 0, -1, 1, -1, -1, 1, -1, -1, 1, -1, -1, 0, 1, 0, -1, -1, -1, 0, -1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, 0, -1, 0, 0, 1, 0, -1, 1, 0, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0, -1, 1, 0, 1, 1, 0, 0, 1, -1, 1, 0, 1, 1, 1, 1, -1, -1, 0, 0, 0, -1, -1, 1, 0, 0, -1, 0, 1, 1, -1, -1, -1, 0, 1, -1, 1, -1, 1, 1, 1, 0, -1, -1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, -1, 1, -1, 1, 1, 1, 0, -1, 1, 1, -1, 0, 0, 1, 0, 1, 1, -1, 1, -1, -1, -1, -1, -1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 0, 0, -1, -1, -1, 1, 0, 0, 1, -1, -1, 0, 1, 0, 0, 0, 1, -1, 1, -1, 1, -1, 1, 0, 1, 0, 1, 1, 0, 1, -1, 1, 0, -1, 0, -1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, -1, 1, -1, 1, 1, 0, -1, 0, 0, -1, 1, -1, -1, 0, -1, 0, 1, -1, -1, 1, 1, 0, -1, 0};
+int8_t TestVector1[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+int8_t TestVector2[] = { -1, 1, 1, 0, -1, -1, 0, 1, 1, -1, 1, -1, 1, -1, 1, 0, 0, 0, 0, -1, 0, 1, 0, -1, 1, 1, 0, -1, 1, -1, 1, -1, 0, -1, 0, 1, 0, -1, 1, 0, -1, 0, -1, -1, -1, 1, 1, -1, 1, -1, 0, 0, 0, 1, -1, 0, -1, 1, 0, -1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 0, 0, -1, 1, 1, 1, 0, 1, 0, 1, 0, -1, -1, 0, -1, 0, -1, -1, 1, 1, -1, -1, 0, 0, 0, 0, 0, 1, 1, 1, -1, 1, 1, -1, 1, 1, 1, 0, 0, 1, 0, -1, -1, 0, 0, -1, -1, -1, -1, 1, -1, 1, 0, 0, -1, -1, 1, 0, -1, 1, -1, -1, 0, 0, 1, -1, 1, -1, 1, -1, -1, -1, 0, 1, 1, -1, 1, 1, 0, 0, -1, 0, 1, -1, 1, 0, 1, -1, 1, 1, 0, -1, 0, -1, -1, 0, 0, 1, -1, -1, 1, -1, -1, 0, -1, 1, 0, 1, -1, -1, 1, 1, -1, 1, -1, 0, 1, 0, 1, -1, 1, 1, 0, 1, -1, -1, 1, 0, 1, -1, -1, -1, -1, 0, -1, 1, 0, -1, 1, 0, 1, 0, -1, 1, -1, 0, 1, 0, 1, -1, -1, -1, 0, -1, 1, 1, 0, -1, 1, 0, 0, -1, 1, -1, 0, 1, 1, -1, 0, 0, 0, 0};
 
 
 int run_test(int8_t in)
 {
 	CurlCtx ctx;
-	int8_t input[243], output[256], retVal = 1;
-	char final_output[1024];
-    if (in < -1 || in > 1)
-    {
-        fprintf(stderr, "Invalid input\n");
-        return(-1);
-    }
-    
-    CurlInit(&ctx);
-    memset(input, in, HASH_SIZE);
-    memset(output, 0x00, 256);
-    
-    memset(final_output, 0 , 1024 * sizeof(char));
-    
-    Curl(&ctx, input, HASH_SIZE);
-    CurlSqueeze(&ctx, output);
+	int8_t input[HASH_SIZE], output[HASH_SIZE];
+	
+	if (in < -1 || in > 1)
+	{
+		fprintf(stderr, "Invalid input\n");
+		return(-1);
+	}
 
-    char temp[16];
-    strcpy(final_output, "[");
-    for(int i = 0; i < HASH_SIZE - 1; ++i)
-    {
-        sprintf(temp, "%d, ", output[i]);
-        strcat(final_output, temp);
-    }
-    
-    sprintf(temp, "%d]", output[HASH_SIZE-1]);
-    strcat(final_output, temp);
+	CurlInit(&ctx);
+	memset(input, in, HASH_SIZE);
+	memset(output, 0x00, HASH_SIZE);
 
-    // Test
-    
-    FILE *fp;
-    char ref[1024];
-    memset(ref, 0, 1024);
-    char sysCall[64];
-    sprintf(sysCall, "java CurlReference %d", in);
-    fp = popen(sysCall, "r");
-    if(fp==NULL){
-        fprintf(stderr, "Failed to run Reference Java Code\n");
-        exit(1);
-    }
-    while(fgets(ref, sizeof(ref)-1, fp) != NULL)
-        ;
-    ref[strlen(ref)-1] = 0; //trailing \n from java
-    pclose(fp);
-    retVal = strcmp(final_output, ref);
-
-    return retVal;
+	Curl(&ctx, input, HASH_SIZE);
+	CurlSqueeze(&ctx, output);
+	
+	switch(in)
+	{
+		case -1:
+			return(memcmp(TestVector0, output, HASH_SIZE));
+		case 0:
+			return(memcmp(TestVector1, output, HASH_SIZE));
+		case 1:
+			return(memcmp(TestVector2, output, HASH_SIZE));
+	}
 }
 

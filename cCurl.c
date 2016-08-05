@@ -42,13 +42,6 @@ void CurlSqueeze(CurlCtx *ctx, void *output)
     CurlTransform(ctx);
 }
 
-//Tests
-/*
-    To run:
-    javac CurlReference.java
-    uncomment from here on and run
-*/
-
 int run_test(int8_t in);
 
 int main()
